@@ -25,11 +25,11 @@ export default function Home() {
   const cartSubtotal = cart.reduce((sum, item) => sum + item.price, 0);
   const deliveryCharge = (cartSubtotal >= 100000 || cartSubtotal === 0) ? 0 : 5000;
   const finalTotal = cartSubtotal + deliveryCharge;
-const cartSummary = cart.map(item => `${item.name} (x${item.quantity})`).join(", ");
-  const totalAmount = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const fullOrderString = cart.length > 0 
-    ? `Items: ${cartSummary} | Total: ${totalAmount} UGX` 
-    : "Empty Cart";
+const cartSummary = cart.length > 0 
+    ? cart.map(item => `${item.name}`).join(", ") 
+    : "Empty";
+    
+  const fullOrderString = `Items: ${cartSummary} | Total: ${finalTotal} UGX`;
   // --- ACTIONS ---
   const addToCart = (name: string, price: number) => {
     setCart([...cart, { id: Date.now(), name, price }]);
