@@ -25,7 +25,7 @@ export default function Home() {
   const cartSubtotal = cart.reduce((sum, item) => sum + item.price, 0);
   const deliveryCharge = (cartSubtotal >= 100000 || cartSubtotal === 0) ? 0 : 5000;
   const finalTotal = cartSubtotal + deliveryCharge;
-const cartSummary = cart.length > 0 
+  const cartSummary = cart.length > 0 
     ? cart.map(item => `${item.name}`).join(", ") 
     : "Empty";
     
@@ -239,7 +239,7 @@ const cartSummary = cart.length > 0
     disabled={cart.length === 0}
     className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all"
   >
-    {cart.length > 0 ? `Confirm Order (${totalAmount} UGX)` : "Add Items to Cart First"}
+    {cart.length > 0 ? `Confirm Order (${finalTotal} UGX)` : "Add Items to Cart First"}
   </button>
 </form>
           </div>
