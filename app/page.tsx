@@ -18,7 +18,9 @@ export default function Home() {
   const passionImg = "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?q=80&w=1974&auto=format&fit=crop";
   const tropicalImg = "https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1974&auto=format&fit=crop";
   const fruitPlateImg = "https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1974&auto=format&fit=crop";
-  
+  const pineappleImg = "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=800";
+  const watermelonImg = "https://images.unsplash.com/photo-1563245332-692546934440?q=80&w=800";
+  const mixedImg = "https://images.unsplash.com/photo-1610970882739-a69c1693c730?q=80&w=800";
   // Updated Disposable Cups Image from your upload
   const cocktailImg = "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800";
   const cartSubtotal = cart.reduce((sum, item) => sum + item.price, 0);
@@ -100,7 +102,10 @@ export default function Home() {
               {[
                 { name: "Pure Mango (Processed)", price: 6000, img: mangoJuiceImg, desc: "Smooth, fiber-free mango nectar." },
                 { name: "Passion Paradise", price: 6000, img: passionImg, desc: "Tangy local passion fruit." },
-                { name: "Tropical Zest", price: 6000, img: tropicalImg, desc: "Signature seasonal blend." }
+                { name: "Tropical Zest", price: 6000, img: tropicalImg, desc: "Signature seasonal blend." },
+                { name: "Pineapple Punch", price: 6000, img: pineappleImg, desc: "Sweet and crisp tropical delight." },
+                { name: "Watermelon Wave", price: 6000, img: watermelonImg, desc: "Refreshing hydration in every sip." },
+                { name: "M & R Special Mixed", price: 6000, img: mixedImg, desc: "The ultimate energy-boosting blend." }
               ].map((p, i) => (
                 <div key={i} className="group border rounded-[2rem] overflow-hidden hover:shadow-2xl transition-all duration-500">
                   <div className="h-64 overflow-hidden relative">
