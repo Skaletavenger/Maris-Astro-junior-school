@@ -18,9 +18,9 @@ export default function Home() {
   const passionImg = "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?q=80&w=1974&auto=format&fit=crop";
   const tropicalImg = "https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1974&auto=format&fit=crop";
   const fruitPlateImg = "https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1974&auto=format&fit=crop";
-  const pineappleImg = "https://images.unsplash.com/photo-1525385354411-301f126c2aba?q=80&w=800";
-const watermelonImg = "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?q=80&w=800";
-const mixedImg = "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=800";
+  const pineappleImg = "https://images.unsplash.com/photo-1589427321015-8846a728b344?q=80&w=800"; // Pineapple juice in a cup with straw
+  const watermelonImg = "https://images.unsplash.com/photo-1543158034-7127b4097472?q=80&w=800"; // Watermelon juice display
+  const mixedImg = "https://images.unsplash.com/photo-1613478223719-2ab302684d52?q=80&w=800"; // Vibrant mixed juice blend
   // Updated Disposable Cups Image from your upload
   const cocktailImg = "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800";
   const cartSubtotal = cart.reduce((sum, item) => sum + item.price, 0);
