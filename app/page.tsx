@@ -20,8 +20,7 @@ export default function Home() {
   const fruitPlateImg = "https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1974&auto=format&fit=crop";
   
   // Updated Disposable Cups Image from your upload
-  const cupsImg = "https://teal-personal-shrew-922.hostingersite.com/wp-content/uploads/2026/04/17a4fe3e3e3e7511d29ded5c35934b4a.jpg";
-
+  const cocktailImg = "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800";
   const cartSubtotal = cart.reduce((sum, item) => sum + item.price, 0);
   const deliveryCharge = (cartSubtotal >= 100000 || cartSubtotal === 0) ? 0 : 5000;
   const finalTotal = cartSubtotal + deliveryCharge;
@@ -90,7 +89,7 @@ export default function Home() {
           {/* Hero */}
           <div className="bg-green-800 text-white py-20 px-6 text-center">
             <h2 className="text-5xl md:text-6xl font-black mb-6 tracking-tight">Freshness Delivered.</h2>
-            <p className="text-green-100 max-w-2xl mx-auto text-lg mb-8">Naturally processed juices with zero added sugars. Serving the Wakiso, Kalambi, and Buloba areas.</p>
+            <p className="text-green-100 max-w-2xl mx-auto text-lg mb-8">Naturally processed juices with zero added sugars.</p>
             <a href="#juices" className="bg-orange-500 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest shadow-xl inline-block">Shop Now</a>
           </div>
 
@@ -162,12 +161,12 @@ export default function Home() {
               </div>
 
               <div id="cups" className="bg-gray-50 p-8 rounded-[2rem] border border-gray-200">
-                <h3 className="text-2xl font-black mb-6">🥤 Disposable Cups</h3>
-                <img src={cupsImg} className="w-full h-48 object-cover rounded-2xl mb-6" alt="Disposable Cups" />
+                <h3 className="text-2xl font-black mb-6">🍸 Signature Cocktails</h3>
+                <img src={cocktailImg} className="w-full h-48 object-cover rounded..." />
                 <div className="space-y-3">
                   {[ {v: "200ml", p: 1000}, {v: "350ml", p: 2000}, {v: "500ml", p: 3000} ].map(c => (
-                    <button key={c.v} onClick={() => addToCart(`${c.v} Cup`, c.p)} className="w-full flex justify-between items-center p-4 bg-white rounded-xl hover:bg-green-50 transition font-bold">
-                      <span>{c.v} Cup</span>
+                    <button key={c.v} onClick={() => addToCart(`${c.v} Cocktail`, c.p)} className="w-full flex justify-between items-center p-4 bg-white rounded-xl hover:bg-green-50 transition font-bold">
+                      <span>{c.v} Cocktail</span>
                       <span className="text-green-700">{c.p.toLocaleString()} UGX</span>
                     </button>
                   ))}
