@@ -25,7 +25,11 @@ export default function Home() {
   const cartSubtotal = cart.reduce((sum, item) => sum + item.price, 0);
   const deliveryCharge = (cartSubtotal >= 100000 || cartSubtotal === 0) ? 0 : 5000;
   const finalTotal = cartSubtotal + deliveryCharge;
-
+const cartSummary = cart.map(item => `${item.name} (x${item.quantity})`).join(", ");
+  const totalAmount = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const fullOrderString = cart.length > 0 
+    ? `Items: ${cartSummary} | Total: ${totalAmount} UGX` 
+    : "Empty Cart";
   // --- ACTIONS ---
   const addToCart = (name: string, price: number) => {
     setCart([...cart, { id: Date.now(), name, price }]);
@@ -68,7 +72,7 @@ export default function Home() {
       {/* Navigation */}
       <nav className="bg-white/90 backdrop-blur-md border-b py-4 px-6 flex justify-between items-center sticky top-0 z-50">
         <h1 className="text-2xl font-black text-green-700 cursor-pointer tracking-tighter" onClick={() => setView('home')}>
-          M&R JUICE
+          M&R JUICE 
         </h1>
         <div className="hidden md:flex gap-8 font-bold text-xs uppercase tracking-widest text-gray-500">
           <button onClick={() => setView('home')} className="hover:text-green-600 transition">Home</button>
@@ -217,16 +221,26 @@ export default function Home() {
           <div className="bg-white border-4 border-green-600 rounded-[3rem] p-10 shadow-2xl">
             <h2 className="text-3xl font-black mb-8 uppercase text-green-800 tracking-tighter">Order Window</h2>
             
-            <form action="https://formspree.io/f/xqegnzbe" method="POST">
-  {/* Make sure each input has a 'name' attribute so the data shows in your email */}
-  <input type="text" name="customer_name" placeholder="Full Name" required />
-  <input type="text" name="phone" placeholder="Phone Number" required />
-  <input type="text" name="address" placeholder="Delivery Address in Buloba/Wakiso" required />
-  
-  {/* This will list the juices they want to buy */}
-  <textarea name="order_details" placeholder="What are you ordering?"></textarea>
+          <form action="https://formspree.io/f/xqegnzbe" method="POST" className="flex flex-col gap-4">
+  {/* Basic Customer Info */}
+  <input type="text" name="name" placeholder="Full Name" required className="p-2 border rounded" />
+  <input type="text" name="phone" placeholder="WhatsApp / Phone Number" required className="p-2 border rounded" />
+  <input type="text" name="address" placeholder="Delivery Address (e.g., Buloba/Wakiso)" required className="p-2 border rounded" />
 
-  <button type="submit">Submit Order</button>
+  {/* The Hidden Cart Data - This sends the juices to your email */}
+  <input type="hidden" name="order_details" value={fullOrderString} />
+
+  {/* Space for them to tell you anything else */}
+  <textarea name="message" placeholder="Special instructions (optional)" className="p-2 border rounded h-24"></textarea>
+
+  {/* The Submit Button showing the dynamic total */}
+  <button 
+    type="submit" 
+    disabled={cart.length === 0}
+    className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all"
+  >
+    {cart.length > 0 ? `Confirm Order (${totalAmount} UGX)` : "Add Items to Cart First"}
+  </button>
 </form>
           </div>
         </section>
