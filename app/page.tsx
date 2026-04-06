@@ -246,10 +246,54 @@ export default function Home() {
         </section>
       )}
 
-      <footer className="py-12 border-t text-center text-gray-400 text-sm">
-        <p className="font-black text-gray-900 tracking-widest">M & R JUICE PROCESSING ENTERPRISE</p>
-        <p>Wakiso District • Kalambi • Buloba</p>
-      </footer>
+      <footer className="bg-green-900 text-white py-12 border-t border-green-800">
+  <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+    
+    {/* Business Info */}
+    <div>
+      <h3 className="text-xl font-bold mb-4">M & R Juice Processing</h3>
+      <p className="text-green-200 text-sm">
+        Providing natural, sugar-free juices to the Wakiso, Kalambi, and Buloba areas.
+      </p>
+    </div>
+
+    {/* Contact Details */}
+    <div>
+      <h3 className="text-xl font-bold mb-4">Contact Us</h3>
+      <ul className="space-y-2 text-green-200">
+        <li>
+          <span className="font-semibold text-white">Email:</span>{" "}
+          <a href="mailto:gabrilemaurice@gmail.com" className="hover:underline">
+            gabrilemaurice@gmail.com
+          </a>
+        </li>
+        <li>
+          <span className="font-semibold text-white">Phone:</span>{" "}
+          <a href="tel:+256747200442" className="hover:underline">
+            +256 747 200 442
+          </a>
+        </li>
+        <li>
+          <span className="font-semibold text-white">Location:</span> Buloba, Wakiso District
+        </li>
+      </ul>
+    </div>
+
+    {/* Quick Links or Trading Hours */}
+    <div>
+      <h3 className="text-xl font-bold mb-4">Business Hours</h3>
+      <p className="text-green-200 text-sm">
+        Monday - Saturday: 8:00 AM - 6:00 PM<br />
+        Sunday: Closed
+      </p>
+    </div>
+
+  </div>
+
+  <div className="mt-12 text-center text-green-500 text-xs border-t border-green-800 pt-6">
+    &copy; {new Date().getFullYear()} M & R Juice Processing Enterprise. All rights reserved.
+  </div>
+</footer>
     </div>
   );
 }
