@@ -18,9 +18,9 @@ export default function Home() {
   const passionImg = "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?q=80&w=1974&auto=format&fit=crop";
   const tropicalImg = "https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1974&auto=format&fit=crop";
   const fruitPlateImg = "https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1974&auto=format&fit=crop";
-  const pineappleImg = "https://images.unsplash.com/photo-1525385354411-301f126c2aba?q=80&w=800"; // Pineapple cup with straw
-  const watermelonImg = "https://images.unsplash.com/photo-1563245332-692546934440?q=80&w=800"; // Cut watermelon with juice display
-  const mixedImg = "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?q=80&w=800"; // Variety of fruits/juices
+  const pineappleImg = "https://images.unsplash.com/photo-1525385354411-301f126c2aba?q=80&w=800";
+const watermelonImg = "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?q=80&w=800";
+const mixedImg = "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=800";
   // Updated Disposable Cups Image from your upload
   const cocktailImg = "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800";
   const cartSubtotal = cart.reduce((sum, item) => sum + item.price, 0);
@@ -105,7 +105,7 @@ export default function Home() {
                { name: "Tropical Zest", price: 6000, img: tropicalImg, desc: "Signature seasonal blend." },
                { name: "Pineapple Punch", price: 6000, img: pineappleImg, desc: "Served in a theme cup with a straw." },
                { name: "Watermelon Wave", price: 6000, img: watermelonImg, desc: "Freshly cut watermelon served with chilled juice." },
-               { name: "M & R Special Mixed", price: 6000, img: mixedImg, desc: "A custom mixture of all fruits based on your choice!" } 
+               { name: "M & R Special Mixed", price: 6000, img: mixedImg, desc: "A custom blend of your favorite fruits!" },
               ].map((p, i) => (
                 <div key={i} className="group border rounded-[2rem] overflow-hidden hover:shadow-2xl transition-all duration-500">
                   <div className="h-64 overflow-hidden relative">
