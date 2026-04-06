@@ -217,29 +217,17 @@ export default function Home() {
           <div className="bg-white border-4 border-green-600 rounded-[3rem] p-10 shadow-2xl">
             <h2 className="text-3xl font-black mb-8 uppercase text-green-800 tracking-tighter">Order Window</h2>
             
-            <form onSubmit={handleSubmitOrder} className="space-y-4">
-              <input required type="text" placeholder="Full Name" className="w-full p-4 border bg-gray-50 rounded-2xl" value={customerName} onChange={e => setCustomerName(e.target.value)} />
-              <input required type="tel" placeholder="Phone Number" className="w-full p-4 border bg-gray-50 rounded-2xl" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
-              <input required type="email" placeholder="Email Address" className="w-full p-4 border bg-gray-50 rounded-2xl" value={email} onChange={e => setEmail(e.target.value)} />
-              <input required type="text" placeholder="Delivery Location (Kalambi, Buloba, etc.)" className="w-full p-4 border bg-gray-50 rounded-2xl" value={location} onChange={e => setLocation(e.target.value)} />
-              
-              <div className="bg-green-50 p-6 rounded-[2rem] border-2 border-green-100 mt-6">
-                <div className="flex justify-between text-gray-600 font-bold"><span>Subtotal:</span><span>{cartSubtotal.toLocaleString()} UGX</span></div>
-                <div className="flex justify-between text-gray-600 font-bold mb-4"><span>Delivery:</span><span>{deliveryCharge === 0 ? "FREE" : "5,000 UGX"}</span></div>
-                <div className="flex justify-between text-2xl font-black text-green-900 pt-4 border-t-2 border-green-200">
-                  <span>PAYABLE:</span>
-                  <span>{finalTotal.toLocaleString()} UGX</span>
-                </div>
-              </div>
+            <form action="https://formspree.io/f/xqegnzbe" method="POST">
+  {/* Make sure each input has a 'name' attribute so the data shows in your email */}
+  <input type="text" name="customer_name" placeholder="Full Name" required />
+  <input type="text" name="phone" placeholder="Phone Number" required />
+  <input type="text" name="address" placeholder="Delivery Address in Buloba/Wakiso" required />
+  
+  {/* This will list the juices they want to buy */}
+  <textarea name="order_details" placeholder="What are you ordering?"></textarea>
 
-              <button type="submit" className="w-full bg-green-700 text-white py-6 rounded-2xl font-black text-2xl shadow-2xl hover:bg-green-800 transition-all">
-                SUBMIT ORDER
-              </button>
-              
-              <p className="text-center text-[10px] text-gray-400 uppercase font-black tracking-widest mt-4 italic">
-                A confirmation will be sent to your email after submission.
-              </p>
-            </form>
+  <button type="submit">Submit Order</button>
+</form>
           </div>
         </section>
       )}
