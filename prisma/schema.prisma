@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model SchoolDocument {
+  id        String   @id @default(cuid())
+  url       String
+  name      String
+  createdAt DateTime @default(now())
+}

@@ -1,303 +1,189 @@
 "use client";
-import React, { useState } from 'react';
+import ContactForm from './components/ContactForm';
+import React from 'react';
 
 export default function Home() {
-  // --- STATE MANAGEMENT ---
-  const [cart, setCart] = useState<{id: number, name: string, price: number}[]>([]);
-  const [view, setView] = useState<'home' | 'cart' | 'checkout'>('home');
-  const [customLiters, setCustomLiters] = useState(0);
   
-  // Order Form Fields
-  const [customerName, setCustomerName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [location, setLocation] = useState('');
-
-  // --- ASSETS ---
-  const mangoJuiceImg = "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1974&auto=format&fit=crop";
-  const passionImg = "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?q=80&w=1974&auto=format&fit=crop";
-  const tropicalImg = "https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1974&auto=format&fit=crop";
-  const fruitPlateImg = "https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1974&auto=format&fit=crop";
-  const pineappleImg = "https://images.unsplash.com/photo-1589427321015-8846a728b344?q=80&w=800"; // Pineapple juice in a cup with straw
-  const watermelonImg = "https://images.unsplash.com/photo-1543158034-7127b4097472?q=80&w=800"; // Watermelon juice display
-  const mixedImg = "https://images.unsplash.com/photo-1613478223719-2ab302684d52?q=80&w=800"; // Vibrant mixed juice blend
-  // Updated Disposable Cups Image from your upload
-  const cocktailImg = "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800";
-  const cartSubtotal = cart.reduce((sum, item) => sum + item.price, 0);
-  const deliveryCharge = (cartSubtotal >= 100000 || cartSubtotal === 0) ? 0 : 5000;
-  const finalTotal = cartSubtotal + deliveryCharge;
-  const cartSummary = cart.length > 0 
-    ? cart.map(item => `${item.name}`).join(", ") 
-    : "Empty";
-    
-  const fullOrderString = `Items: ${cartSummary} | Total: ${finalTotal} UGX`;
-  // --- ACTIONS ---
-  const addToCart = (name: string, price: number) => {
-    setCart([...cart, { id: Date.now(), name, price }]);
-  };
-
-  const removeFromCart = (id: number) => {
-    setCart(cart.filter(item => item.id !== id));
-  };
-
-  // --- ORDER SUBMISSION LOGIC ---
-  const handleSubmitOrder = (e: React.FormEvent) => {
-    e.preventDefault();
-    const orderItems = cart.map(item => item.name).join(", ");
-
-    // Logic to simulate sending data to gabrilemaurice@gmail.com
-    console.log("Order submitted to gabrilemaurice@gmail.com", {
-      client: customerName,
-      phone: phoneNumber,
-      email: email,
-      location: location,
-      order: orderItems,
-      total: finalTotal
-    });
-
-    alert(`Success, ${customerName}!\n\nYour order has been sent to our team. You will receive a confirmation email at ${email} shortly.\n\nDelivery will be processed within 24 hours.`);
-    
-    // Resetting state
-    setCart([]);
-    setCustomerName('');
-    setPhoneNumber('');
-    setEmail('');
-    setLocation('');
-    setView('home');
-    window.scrollTo(0,0);
-  };
-
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans">
-      
-      {/* Navigation */}
-      <nav className="bg-white/90 backdrop-blur-md border-b py-4 px-6 flex justify-between items-center sticky top-0 z-50">
-        <h1 className="text-2xl font-black text-green-700 cursor-pointer tracking-tighter" onClick={() => setView('home')}>
-          M&R JUICE 
-        </h1>
-        <div className="hidden md:flex gap-8 font-bold text-xs uppercase tracking-widest text-gray-500">
-          <button onClick={() => setView('home')} className="hover:text-green-600 transition">Home</button>
-          <a href="#juices" className="hover:text-green-600 transition">Juices</a>
-          <a href="#subscriptions" className="hover:text-green-600 transition">Packages</a>
-          <a href="#events" className="hover:text-green-600 transition">Events</a>
+    <div className="min-h-screen bg-white text-slate-900 font-sans">
+      {/* --- TOP BAR --- */}
+      <div className="bg-[#001f3f] text-white py-2 px-6 hidden md:flex justify-between text-xs">
+        <div className="flex gap-4">
+          <span>📞 (+256) 704105651</span>
+          <span>📍 Lugeye, Kakiri Town Council, Wakiso-Kampala</span>
         </div>
-        <button onClick={() => setView('cart')} className="bg-orange-500 text-white px-5 py-2 rounded-full font-black text-sm shadow-lg">
-          🛒 CART ({cart.length})
-        </button>
-      </nav>
+        <div className="flex gap-4">
+          <span>Facebook</span>
+          <span>TikTok</span>
+        </div>
+      </div>
 
-      {view === 'home' && (
-        <main className="animate-in fade-in duration-500">
-          {/* Hero */}
-          <div className="bg-green-800 text-white py-20 px-6 text-center">
-            <h2 className="text-5xl md:text-6xl font-black mb-6 tracking-tight">Freshness Delivered.</h2>
-            <p className="text-green-100 max-w-2xl mx-auto text-lg mb-8">Naturally processed juices with zero added sugars.</p>
-            <a href="#juices" className="bg-orange-500 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest shadow-xl inline-block">Shop Now</a>
+      {/* --- NAVBAR --- */}
+      <header className="sticky top-0 z-50 bg-white shadow-md border-b border-slate-100">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-3">
+            <img src="/logo-PNG.png" alt="Maris-Astro Logo" className="h-14 w-auto" />
+            <div className="hidden sm:block">
+              <p className="text-lg font-bold uppercase tracking-tighter text-emerald-800 leading-none">Maris-Astro</p>
+              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Junior School</p>
+            </div>
           </div>
+          <nav className="flex gap-4 md:gap-8 text-sm font-bold text-slate-700 items-center">
+            <a href="#about" className="hover:text-emerald-700 transition">About</a>
+            <a href="#academics" className="hover:text-emerald-700 transition">Academics</a>
+            <a href="#gallery" className="hover:text-emerald-700 transition">Gallery</a>
+            <a href="#resources" className="hover:text-emerald-700 transition">Resources</a>
+            <button 
+              onClick={() => window.location.href = '/admin/login'}
+              className="bg-[#001f3f] text-white px-4 py-2 rounded-lg text-xs hover:bg-emerald-800 transition"
+            >
+              Admin Login
+            </button>
+          </nav>
+        </div>
+      </header>
 
-          {/* Juices Section */}
-          <section id="juices" className="py-20 px-6 max-w-7xl mx-auto">
-            <h2 className="text-3xl font-black mb-10 border-l-8 border-orange-500 pl-4 uppercase italic text-gray-800 text-left">The Juice Bar (6,000 / LTR)</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {[
-               { name: "Pure Mango (Processed)", price: 6000, img: mangoJuiceImg, desc: "Smooth, fiber-free mango nectar." },
-               { name: "Passion Paradise", price: 6000, img: passionImg, desc: "Tangy local passion fruit." },
-               { name: "Tropical Zest", price: 6000, img: tropicalImg, desc: "Signature seasonal blend." },
-               { name: "Pineapple Punch", price: 6000, img: pineappleImg, desc: "Served in a theme cup with a straw." },
-               { name: "Watermelon Wave", price: 6000, img: watermelonImg, desc: "Freshly cut watermelon served with chilled juice." },
-               { name: "M & R Special Mixed", price: 6000, img: mixedImg, desc: "A custom blend of your favorite fruits!" },
-              ].map((p, i) => (
-                <div key={i} className="group border rounded-[2rem] overflow-hidden hover:shadow-2xl transition-all duration-500">
-                  <div className="h-64 overflow-hidden relative">
-                    <img src={p.img} className="w-full h-full object-cover group-hover:scale-110 transition duration-700" alt={p.name} />
-                  </div>
-                  <div className="p-8">
-                    <h3 className="text-2xl font-black">{p.name}</h3>
-                    <p className="text-gray-500 text-sm mt-2 mb-6 text-left">{p.desc}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-green-700 font-black text-xl">6,000 UGX <span className="text-xs text-gray-400">/ L</span></span>
-                      <button onClick={() => addToCart(p.name, 6000)} className="bg-green-600 text-white px-6 py-2 rounded-xl font-bold shadow-lg">+ Add</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+      <main>
+        {/* --- HERO SECTION --- */}
+        <section className="relative bg-[#001f3f] py-24 px-6 overflow-hidden">
+          <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-[#FDB813] mb-6">
+              Welcome to Maris-Astro Junior School
+            </h1>
+            <p className="max-w-3xl text-lg text-slate-200 leading-relaxed">
+              A nurturing learning community dedicated to helping every child grow academically, socially, and emotionally. 
+              Providing quality education in a safe, supportive, and engaging environment.
+            </p>
+            <div className="mt-10 flex gap-4">
+              <button className="bg-[#FDB813] text-[#001f3f] px-8 py-3 rounded-md font-bold hover:scale-105 transition">Learn More</button>
+              <button className="bg-white text-[#001f3f] px-8 py-3 rounded-md font-bold hover:scale-105 transition">2026 Events Calendar</button>
             </div>
-          </section>
+          </div>
+          {/* Subtle Background Pattern */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <img src="/logo-PNG.png" className="w-96 absolute -right-20 -bottom-20 rotate-12" alt="" />
+          </div>
+        </section>
 
-          {/* Monthly & Custom Packages */}
-          <section id="subscriptions" className="bg-gray-900 py-20 px-6 text-white text-left">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="bg-green-700 p-10 rounded-[3rem] shadow-2xl">
-                <h3 className="text-3xl font-black mb-4">Family Monthly Pack</h3>
-                <p className="text-green-100 mb-8">Get 10 Liters delivered every week (40L/month). Perfect for healthy households.</p>
-                <div className="text-4xl font-black mb-8">30,000 UGX <span className="text-lg font-normal opacity-60">/ 5 Liters</span></div>
-                <button onClick={() => addToCart("Family Monthly Pack (5L Portion)", 30000)} className="w-full bg-white text-green-800 py-4 rounded-2xl font-black uppercase tracking-widest">Subscribe</button>
-              </div>
-
-              <div className="bg-white text-gray-900 p-10 rounded-[3rem]">
-                <h3 className="text-3xl font-black mb-4">Custom Bulk Order</h3>
-                <p className="text-gray-500 mb-6">Enter liters needed. Rate: 6,000 UGX per Liter.</p>
-                <input 
-                  type="number" 
-                  placeholder="Liters" 
-                  className="w-full p-4 border-2 border-green-600 rounded-2xl text-2xl font-black mb-4" 
-                  onChange={(e) => setCustomLiters(Number(e.target.value))}
-                />
-                <p className="text-2xl font-black text-green-700 mb-6">Total: {(customLiters * 6000).toLocaleString()} UGX</p>
-                <button onClick={() => addToCart(`Custom Order (${customLiters}L)`, customLiters * 6000)} className="w-full bg-orange-500 text-white py-4 rounded-2xl font-black uppercase">Add Bulk to Cart</button>
-              </div>
-            </div>
-          </section>
-
-          {/* Sides & Cups */}
-          <section id="sides" className="py-20 px-6 max-w-7xl mx-auto text-left">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="bg-gray-50 p-8 rounded-[2rem] border border-gray-200">
-                <h3 className="text-2xl font-black mb-6">🍓 Fruit Side Plates</h3>
-                <img src={fruitPlateImg} className="w-full h-48 object-cover rounded-2xl mb-6" alt="Fruit Plates" />
-                <div className="space-y-3">
-                  {[ {s: "Small", p: 3000}, {s: "Medium", p: 5000}, {s: "Large", p: 10000} ].map(f => (
-                    <button key={f.s} onClick={() => addToCart(`${f.s} Fruit Plate`, f.p)} className="w-full flex justify-between items-center p-4 bg-white rounded-xl hover:bg-orange-50 transition font-bold">
-                      <span>{f.s} Plate</span>
-                      <span className="text-orange-600">{f.p.toLocaleString()} UGX</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div id="cups" className="bg-gray-50 p-8 rounded-[2rem] border border-gray-200">
-                <h3 className="text-2xl font-black mb-6">🍸 Signature Cocktails</h3>
-                <img src={cocktailImg} className="w-full h-48 object-cover rounded..." />
-                <div className="space-y-3">
-                  {[ {v: "200ml", p: 1000}, {v: "350ml", p: 2000}, {v: "500ml", p: 3000} ].map(c => (
-                    <button key={c.v} onClick={() => addToCart(`${c.v} Cocktail`, c.p)} className="w-full flex justify-between items-center p-4 bg-white rounded-xl hover:bg-green-50 transition font-bold">
-                      <span>{c.v} Cocktail</span>
-                      <span className="text-green-700">{c.p.toLocaleString()} UGX</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Events Section */}
-          <section id="events" className="py-24 px-6 bg-black text-white text-center">
-            <div className="max-w-4xl mx-auto">
-              <span className="bg-orange-600 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Premium Service</span>
-              <h2 className="text-5xl font-black mt-6 mb-8 uppercase italic">Functions & Parties</h2>
-              <p className="text-gray-400 text-lg mb-12">
-                Make your event unforgettable with high-end natural juice service. We accommodate weddings, office functions, and private parties with customized dispensers and staffing.
+        {/* --- MISSION & VISION --- */}
+        <section className="py-20 bg-slate-50 px-6">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-10 rounded-2xl border-2 border-[#FDB813] shadow-lg">
+              <h3 className="text-[#FDB813] text-sm font-bold uppercase tracking-widest mb-4">Our Mission</h3>
+              <p className="text-slate-700 leading-8">
+                To provide quality, affordable, and holistic education that nurtures curiosity, creativity, and moral integrity in every child, 
+                empowering learners to become confident, compassionate, and productive members of society.
               </p>
-              <a href="mailto:gabrilemaurice@gmail.com?subject=Event Quote Request" className="bg-white text-black px-12 py-5 rounded-full font-black text-xl hover:bg-green-500 hover:text-white transition-all shadow-2xl inline-block">
-                Request a Custom Quote
-              </a>
             </div>
-          </section>
-        </main>
-      )}
-
-      {/* Cart Review */}
-      {view === 'cart' && (
-        <section className="py-16 px-6 max-w-3xl mx-auto text-left">
-          <h2 className="text-4xl font-black mb-10">Review Your Order</h2>
-          {cart.length === 0 ? (
-            <p className="text-gray-400">Empty basket.</p>
-          ) : (
-            <div className="space-y-4">
-              {cart.map(item => (
-                <div key={item.id} className="flex justify-between items-center border-b pb-4">
-                  <span className="font-bold">{item.name}</span>
-                  <button onClick={() => removeFromCart(item.id)} className="text-red-500 text-sm">Remove</button>
-                </div>
-              ))}
-              <div className="pt-8 text-right">
-                <p className="text-3xl font-black mb-6">Subtotal: {cartSubtotal.toLocaleString()} UGX</p>
-                <button onClick={() => setView('checkout')} className="bg-orange-500 text-white px-12 py-4 rounded-2xl font-black text-xl">Proceed to Order Details</button>
-              </div>
+            <div className="bg-white p-10 rounded-2xl border-2 border-emerald-700 shadow-lg">
+              <h3 className="text-emerald-700 text-sm font-bold uppercase tracking-widest mb-4">Our Vision</h3>
+              <p className="text-slate-700 leading-8">
+                A thriving generation of well-educated, inspired young people who transform their communities through knowledge, discipline, and service.
+              </p>
             </div>
-          )}
-        </section>
-      )}
-
-      {/* NEW ORDER WINDOW (Checkout) */}
-      {view === 'checkout' && (
-        <section className="py-16 px-6 max-w-2xl mx-auto text-left">
-          <div className="bg-white border-4 border-green-600 rounded-[3rem] p-10 shadow-2xl">
-            <h2 className="text-3xl font-black mb-8 uppercase text-green-800 tracking-tighter">Order Window</h2>
-            
-          <form action="https://formspree.io/f/xqegnzbe" method="POST" className="flex flex-col gap-4">
-  {/* Basic Customer Info */}
-  <input type="text" name="name" placeholder="Full Name" required className="p-2 border rounded" />
-  <input type="text" name="phone" placeholder="WhatsApp / Phone Number" required className="p-2 border rounded" />
-  <input type="text" name="address" placeholder="Delivery Address (e.g., Buloba/Wakiso)" required className="p-2 border rounded" />
-
-  {/* The Hidden Cart Data - This sends the juices to your email */}
-  <input type="hidden" name="order_details" value={fullOrderString} />
-
-  {/* Space for them to tell you anything else */}
-  <textarea name="message" placeholder="Special instructions (optional)" className="p-2 border rounded h-24"></textarea>
-
-  {/* The Submit Button showing the dynamic total */}
-  <button 
-    type="submit" 
-    disabled={cart.length === 0}
-    className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all"
-  >
-    {cart.length > 0 ? `Confirm Order (${finalTotal} UGX)` : "Add Items to Cart First"}
-  </button>
-</form>
           </div>
         </section>
-      )}
 
-      <footer className="bg-green-900 text-white py-12 border-t border-green-800">
-  <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-    
-    {/* Business Info */}
-    <div>
-      <h3 className="text-xl font-bold mb-4">M & R Juice Processing</h3>
-      <p className="text-green-200 text-sm">
-        Providing natural, sugar-free juices to the Wakiso, Kalambi, and Buloba areas.
-      </p>
-    </div>
+        {/* --- ABOUT / WHO WE ARE --- */}
+        <section id="about" className="py-24 px-6 max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <img src="/logo-PNG.png" className="w-full max-w-md rounded-3xl shadow-2xl border-8 border-slate-100" alt="School Life" />
+            </div>
+            <div>
+              <h2 className="text-4xl font-bold text-[#001f3f] mb-6 underline decoration-[#FDB813] underline-offset-8">Who We Are</h2>
+              <p className="text-slate-600 mb-6 leading-relaxed">
+                Maris Astro Junior School is a community-based, not-for-profit educational institution founded by 
+                <span className="font-bold text-emerald-800"> Mr. Mboowa Ssebwami Deogratias</span> and 
+                <span className="font-bold text-emerald-800"> Mrs. Mboowa Mary Gorrethy Nalubega</span>.
+              </p>
+              <p className="text-slate-600 mb-8 leading-relaxed">
+                Established in 2014 and officially opened in 2017, our school stands as a beacon of hope for the community of 
+                Lugeye Village, Kakiri Town Council—about 16 miles from Kampala.
+              </p>
+              <div className="bg-emerald-50 p-6 rounded-xl border-l-4 border-emerald-700 italic text-emerald-900">
+                &quot;Together we are winners&quot; — Our Story began with a genuine desire to give back to the community of Lugeye.
+              </div>
+            </div>
+          </div>
+        </section>
 
-    {/* Contact Details */}
-    <div>
-      <h3 className="text-xl font-bold mb-4">Contact Us</h3>
-      <ul className="space-y-2 text-green-200">
-        <li>
-          <span className="font-semibold text-white">Email:</span>{" "}
-          <a href="mailto:gabrilemaurice@gmail.com" className="hover:underline">
-            gabrilemaurice@gmail.com
-          </a>
-        </li>
-        <li>
-          <span className="font-semibold text-white">Phone:</span>{" "}
-          <a href="tel:+256747200442" className="hover:underline">
-            +256 747 200 442
-          </a>
-        </li>
-        <li>
-          <span className="font-semibold text-white">Location:</span> Buloba, Wakiso District
-        </li>
-      </ul>
-    </div>
+        {/* --- RESOURCES / CIRCULARS --- */}
+        <section id="resources" className="py-20 bg-slate-100 px-6">
+          <div className="max-w-7xl mx-auto text-center mb-12">
+            <h2 className="text-4xl font-bold text-[#001f3f]">School Resources</h2>
+            <p className="text-slate-500 mt-2">Important downloads for parents and guardians</p>
+          </div>
+          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-8 rounded-2xl shadow-md flex flex-col items-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-red-600 font-bold">PDF</span>
+              </div>
+              <h3 className="font-bold text-center mb-4">Admission Requirement & Fees Structure</h3>
+              <button className="bg-emerald-700 text-white px-6 py-2 rounded-full text-sm hover:bg-emerald-800">Download Document</button>
+            </div>
+            <div className="bg-white p-8 rounded-2xl shadow-md flex flex-col items-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-red-600 font-bold">PDF</span>
+              </div>
+              <h3 className="font-bold text-center mb-4">PLE Results 2025</h3>
+              <button className="bg-emerald-700 text-white px-6 py-2 rounded-full text-sm hover:bg-emerald-800">Download Results</button>
+            </div>
+          </div>
+        </section>
 
-    {/* Quick Links or Trading Hours */}
-    <div>
-      <h3 className="text-xl font-bold mb-4">Business Hours</h3>
-      <p className="text-green-200 text-sm">
-        Monday - Saturday: 8:00 AM - 6:00 PM<br />
-        Sunday: Closed
-      </p>
-    </div>
+        {/* --- GALLERY (Public View) --- */}
+        <section id="gallery" className="py-20 px-6 max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Our Impact in Photos</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+             {/* Replace these divs with real <img> tags once you have them in /public */}
+             <div className="aspect-video bg-slate-200 rounded-lg shadow-sm flex items-center justify-center italic text-slate-400">Classroom Learning</div>
+             <div className="aspect-video bg-slate-200 rounded-lg shadow-sm flex items-center justify-center italic text-slate-400">Sports Day 2025</div>
+             <div className="aspect-video bg-slate-200 rounded-lg shadow-sm flex items-center justify-center italic text-slate-400">Gardening Project</div>
+             <div className="aspect-video bg-slate-200 rounded-lg shadow-sm flex items-center justify-center italic text-slate-400">Founders Event</div>
+          </div>
+        </section>
 
-  </div>
+      <section id="contact" className="py-24 px-6 bg-gray-50 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-black mb-8 uppercase italic">Contact Us</h2>
+          <p className="text-gray-600 text-lg mb-12">
+            Have questions? Get in touch with us.
+          </p>
+          <ContactForm />
+        </div>
+      </section>
 
-  <div className="mt-12 text-center text-green-500 text-xs border-t border-green-800 pt-6">
-    &copy; {new Date().getFullYear()} M & R Juice Processing Enterprise. All rights reserved.
-  </div>
-</footer>
+      </main>
+
+      {/* --- FOOTER --- */}
+      <footer className="bg-[#001f3f] text-white py-16 px-6">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 border-b border-slate-700 pb-12">
+          <div>
+            <img src="/logo-PNG.png" alt="Logo" className="h-16 bg-white p-1 rounded-md mb-6" />
+            <p className="text-slate-400 text-sm">Empowering the next generation with quality, affordable, and holistic education since 2014.</p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-6 text-[#FDB813]">Quick Links</h4>
+            <ul className="space-y-3 text-sm text-slate-300">
+              <li><a href="#about" className="hover:text-white transition">About Us</a></li>
+              <li><a href="#academics" className="hover:text-white transition">Academics</a></li>
+              <li><a href="#resources" className="hover:text-white transition">Resources</a></li>
+              <li><a href="#gallery" className="hover:text-white transition">Gallery</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-6 text-[#FDB813]">Visit Us</h4>
+            <p className="text-sm text-slate-300">Lugeye Village, Kakiri Town Council</p>
+            <p className="text-sm text-slate-300 mt-2">Wakiso District, Uganda</p>
+            <p className="text-sm text-[#FDB813] mt-4 font-bold">marisjuniorsch@gmail.com</p>
+          </div>
+        </div>
+        <div className="text-center mt-12 text-xs text-slate-500">
+          © 2026 Maris-Astro Junior School. &quot;Together we are winners&quot;
+        </div>
+      </footer>
+
     </div>
   );
 }
