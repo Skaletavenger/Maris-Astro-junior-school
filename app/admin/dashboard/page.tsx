@@ -1,5 +1,5 @@
 'use client'
-import { useMemo, useState, type DragEvent } from 'react'
+import { useEffect, useMemo, useState, type DragEvent } from 'react'
 
 type UploadItem = {
   id: string
@@ -11,15 +11,112 @@ type UploadItem = {
   error?: string
 }
 
-const uploadEndpoint = (file: File) => (file.type.startsWith('image/') ? 'galleryImage' : 'schoolDocument')
+type GalleryImage = {
+  id: string
+  url: string
+  name: string | null
+  createdAt: string
+}
+
+type SchoolDocument = {
+  id: string
+  url: string
+  name: string
+  createdAt: string
+}
+
+type Toast = {
+  id: string
+  message: string
+  type: 'success' | 'error'
+}
 
 export default function AdminDashboard() {
   const [items, setItems] = useState<UploadItem[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [statusMessage, setStatusMessage] = useState('Drop files or click to upload gallery images and documents.')
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([])
+  const [documents, setDocuments] = useState<SchoolDocument[]>([])
+  const [isUploading, setIsUploading] = useState(false)
+  const [toasts, setToasts] = useState<Toast[]>([])
 
   const galleryItems = useMemo(() => items.filter((item) => item.type === 'IMAGE'), [items])
   const documentItems = useMemo(() => items.filter((item) => item.type === 'DOCUMENT'), [items])
+
+  useEffect(() => {
+    fetchGalleryImages()
+    fetchDocuments()
+  }, [])
+
+  const fetchGalleryImages = async () => {
+    try {
+      const response = await fetch('/api/admin/gallery')
+      if (response.ok) {
+        const data = await response.json()
+        setGalleryImages(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch gallery images:', error)
+    }
+  }
+
+  const fetchDocuments = async () => {
+    try {
+      const response = await fetch('/api/admin/documents')
+      if (response.ok) {
+        const data = await response.json()
+        setDocuments(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch documents:', error)
+    }
+  }
+
+  const addToast = (message: string, type: 'success' | 'error') => {
+    const toast: Toast = {
+      id: Date.now().toString(),
+      message,
+      type,
+    }
+    setToasts((prev) => [...prev, toast])
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== toast.id))
+    }, 5000)
+  }
+
+  const deleteGalleryImage = async (id: string) => {
+    try {
+      const response = await fetch(`/api/admin/gallery/${id}`, {
+        method: 'DELETE',
+      })
+      if (response.ok) {
+        setGalleryImages((prev) => prev.filter((img) => img.id !== id))
+        addToast('Gallery image deleted successfully', 'success')
+      } else {
+        addToast('Failed to delete gallery image', 'error')
+      }
+    } catch (error) {
+      console.error('Error deleting gallery image:', error)
+      addToast('Failed to delete gallery image', 'error')
+    }
+  }
+
+  const deleteDocument = async (id: string) => {
+    try {
+      const response = await fetch(`/api/admin/documents/${id}`, {
+        method: 'DELETE',
+      })
+      if (response.ok) {
+        setDocuments((prev) => prev.filter((doc) => doc.id !== id))
+        addToast('Document deleted successfully', 'success')
+      } else {
+        addToast('Failed to delete document', 'error')
+      }
+    } catch (error) {
+      console.error('Error deleting document:', error)
+      addToast('Failed to delete document', 'error')
+    }
+  }
 
   const createUploadItem = (file: File): UploadItem => ({
     id: `${file.name}-${file.size}-${Date.now()}`,
@@ -37,13 +134,15 @@ export default function AdminDashboard() {
     setItems((prev) => [...newItems, ...prev])
     setStatusMessage(`Queued ${newItems.length} file${newItems.length === 1 ? '' : 's'} for upload.`)
 
+    setIsUploading(true)
     for (const file of fileArray) {
       await uploadFile(file)
     }
+    setIsUploading(false)
   }
 
   const uploadFile = async (file: File) => {
-    const endpoint = uploadEndpoint(file)
+    const type = file.type.startsWith('image/') ? 'image' : 'document';
     setItems((prev) =>
       prev.map((item) =>
         item.fileName === file.name && item.status === 'pending'
@@ -55,8 +154,9 @@ export default function AdminDashboard() {
     try {
       const formData = new FormData()
       formData.append('file', file)
+      formData.append('type', type)
 
-      const response = await fetch(`/api/uploadthing/${endpoint}`, {
+      const response = await fetch('/api/admin/upload', {
         method: 'POST',
         body: formData,
       })
@@ -67,19 +167,27 @@ export default function AdminDashboard() {
       }
 
       const responseData = await response.json()
-      const uploaded = Array.isArray(responseData) ? responseData[0] : responseData
       setItems((prev) =>
         prev.map((item) =>
           item.fileName === file.name && item.status === 'uploading'
             ? {
                 ...item,
                 status: 'done',
-                url: uploaded?.fileUrl || uploaded?.url || item.url,
+                url: responseData.url,
               }
             : item
         )
       )
       setStatusMessage(`Uploaded ${file.name}`)
+
+      // Refresh the lists
+      if (type === 'image') {
+        fetchGalleryImages()
+      } else {
+        fetchDocuments()
+      }
+
+      addToast(`${file.name} uploaded successfully`, 'success')
     } catch (error) {
       setItems((prev) =>
         prev.map((item) =>
@@ -89,6 +197,7 @@ export default function AdminDashboard() {
         )
       )
       setStatusMessage(`Upload failed for ${file.name}`)
+      addToast(`Upload failed for ${file.name}`, 'error')
     }
   }
 
@@ -148,9 +257,10 @@ export default function AdminDashboard() {
               </div>
               <button
                 onClick={() => document.getElementById('file-input')?.click()}
-                className="rounded-full bg-[#000080] px-5 py-2 text-sm font-medium text-[#FFD700] transition hover:bg-[#001070]"
+                disabled={isUploading}
+                className="rounded-full bg-[#000080] px-5 py-2 text-sm font-medium text-[#FFD700] transition hover:bg-[#001070] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Select Files
+                {isUploading ? 'Uploading...' : 'Select Files'}
               </button>
             </div>
             <input
@@ -166,9 +276,10 @@ export default function AdminDashboard() {
 
           <div className="grid gap-8">
             <div className="rounded-3xl border border-[#FFD700]/30 bg-slate-950/80 p-6">
-              <h3 className="text-lg font-semibold text-[#FFD700] mb-5">Instagram Mode</h3>
-              {galleryItems.length ? (
+              <h3 className="text-lg font-semibold text-[#FFD700] mb-5">Gallery Images</h3>
+              {galleryItems.length > 0 || galleryImages.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Show uploaded items first */}
                   {galleryItems.map((item) => (
                     <div key={item.id} className="group overflow-hidden rounded-3xl border border-[#FFD700]/20 bg-slate-900/80">
                       <div className="relative aspect-square overflow-hidden">
@@ -191,6 +302,35 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   ))}
+                  {/* Show existing gallery images */}
+                  {galleryImages.map((image) => (
+                    <div key={image.id} className="group overflow-hidden rounded-3xl border border-[#FFD700]/20 bg-slate-900/80">
+                      <div className="relative aspect-square overflow-hidden">
+                        <img
+                          src={image.url}
+                          alt={image.name || 'Gallery image'}
+                          className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                        />
+                        <button
+                          onClick={() => deleteGalleryImage(image.id)}
+                          className="absolute top-2 right-2 rounded-full bg-red-500/80 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-600"
+                          title="Delete image"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="space-y-2 p-4">
+                        <div className="flex items-center justify-between gap-3 text-sm font-medium text-slate-200">
+                          <span className="truncate">{image.name || 'Unnamed image'}</span>
+                          <span className="rounded-full px-2 py-1 text-[11px] bg-[#FFD700]/20 text-[#FFD700]">
+                            Uploaded
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="rounded-3xl border border-dashed border-[#FFD700]/30 bg-[#000080]/10 p-12 text-center text-slate-500">
@@ -200,9 +340,10 @@ export default function AdminDashboard() {
             </div>
 
             <div className="rounded-3xl border border-[#FFD700]/30 bg-slate-950/80 p-6">
-              <h3 className="text-lg font-semibold text-[#FFD700] mb-5">Document Mode</h3>
-              {documentItems.length ? (
+              <h3 className="text-lg font-semibold text-[#FFD700] mb-5">School Documents</h3>
+              {documentItems.length > 0 || documents.length > 0 ? (
                 <div className="space-y-4">
+                  {/* Show uploaded items first */}
                   {documentItems.map((item) => (
                     <div key={item.id} className="flex flex-col gap-3 rounded-3xl border border-[#FFD700]/20 bg-slate-900/90 p-4 sm:flex-row sm:items-center sm:justify-between">
                       <div>
@@ -226,6 +367,35 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   ))}
+                  {/* Show existing documents */}
+                  {documents.map((doc) => (
+                    <div key={doc.id} className="flex flex-col gap-3 rounded-3xl border border-[#FFD700]/20 bg-slate-900/90 p-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="font-semibold text-slate-100">{doc.name}</p>
+                        <p className="text-sm text-slate-400">Uploaded on {new Date(doc.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <a
+                          href={doc.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="rounded-full border border-[#FFD700] bg-[#000080] px-4 py-2 text-sm font-medium text-[#FFD700] transition hover:bg-[#001070]"
+                        >
+                          View
+                        </a>
+                        <button
+                          onClick={() => deleteDocument(doc.id)}
+                          className="rounded-full bg-red-500/80 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600"
+                          title="Delete document"
+                        >
+                          Delete
+                        </button>
+                        <span className="rounded-full bg-[#FFD700]/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-[#FFD700]/90">
+                          DOCUMENT
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="rounded-3xl border border-dashed border-[#FFD700]/30 bg-[#000080]/10 p-12 text-center text-slate-500">
@@ -235,6 +405,24 @@ export default function AdminDashboard() {
             </div>
           </div>
         </section>
+
+        {/* Toast notifications */}
+        {toasts.length > 0 && (
+          <div className="fixed bottom-4 right-4 z-50 space-y-2">
+            {toasts.map((toast) => (
+              <div
+                key={toast.id}
+                className={`rounded-lg p-4 shadow-lg ${
+                  toast.type === 'success'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-red-500 text-white'
+                }`}
+              >
+                {toast.message}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
