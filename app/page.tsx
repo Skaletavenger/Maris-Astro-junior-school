@@ -33,12 +33,6 @@ export default function Home() {
             <a href="#academics" className="hover:text-emerald-700 transition">Academics</a>
             <a href="#gallery" className="hover:text-emerald-700 transition">Gallery</a>
             <a href="#resources" className="hover:text-emerald-700 transition">Resources</a>
-            <button 
-              onClick={() => window.location.href = '/admin/login'}
-              className="bg-[#001f3f] text-white px-4 py-2 rounded-lg text-xs hover:bg-emerald-800 transition"
-            >
-              Admin Login
-            </button>
           </nav>
         </div>
       </header>
@@ -161,6 +155,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 border-b border-slate-700 pb-12">
           <div>
             <img src="/logo-PNG.png" alt="Logo" className="h-16 bg-white p-1 rounded-md mb-6" />
+            <button 
+              onClick={() => window.location.href = '/admin/login'}
+              className="text-slate-500 text-xs hover:text-slate-400 transition mb-4 opacity-60 hover:opacity-100"
+              title="Admin Access"
+            >
+              Admin
+            </button>
             <p className="text-slate-400 text-sm">Empowering the next generation with quality, affordable, and holistic education since 2014.</p>
           </div>
           <div>
